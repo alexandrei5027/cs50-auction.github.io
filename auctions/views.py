@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
 from .models import User, Listing, Comment, Bid, Wishlist
@@ -17,6 +18,7 @@ def check_for_expired():
         
 check_for_expired()
 
+@login_required
 def index(request):
     
 
@@ -80,6 +82,7 @@ def register(request):
         return render(request, "auctions/register.html")
     
 
+@login_required
 # See auction data and bid for it
 def see_auction(request, auction_id):
     check_for_expired()
@@ -126,6 +129,7 @@ def see_auction(request, auction_id):
         'data' : auction_data[0], 'form' : bid_form, 'bids' : bids_data, 'wishlist' : wishlist
     })
 
+@login_required
 def create_listing(request):
         
     class ListingForm(ModelForm):
@@ -159,11 +163,12 @@ def create_listing(request):
         form.fields[field].widget.attrs["placeholder"] = field.capitalize
     return render(request, "auctions/create_listing.html", { 'form' : form})
 
-
+@login_required
 def get_wishlist(request):
     wishlist = Wishlist.objects.filter(user=request.user).all()
     return render(request, "auctions/wishlist.html", {'wishlist' : wishlist})
 
+@login_required
 def add_wishlist(request, id):
     auction_data = Listing.objects.filter(pk=id).all()
     if request.method == 'POST':
