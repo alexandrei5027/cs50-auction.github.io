@@ -1,0 +1,57 @@
+{% extends 'auctions/layout.html' %}
+{% load static %}
+
+   
+
+{%block title%} Create Listing {% endblock %}
+
+{% block body %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var img = document.getElementById('preview');
+            img.src = "{% static 'auctions/no_image.png'  %}"
+            img.style.display = 'block';
+            img.style.width = '300px'
+            img.style.height = '300px'
+
+    });
+    function previewImage(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function() {
+            var img = document.getElementById('preview');
+            console.log(reader.result)
+            img.src = reader.result;
+            
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+</script>
+
+<form class="form container-fluid" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+<div id="listing-preview">
+    <div class="row align-items-center">
+        <div class="col-3">
+    <img id="preview">
+    {{form.photo}}
+</div>
+<div class="col-3">
+
+    
+        {% for field in form %}
+                {% if field != form.photo %}
+                      <div class="form-control-lg rounded">{{field}}</div>
+                 {% endif %}
+         {% endfor %}
+
+         
+</div>
+<button type="submit" class="form-control-lg button btn btn-primary">Create Listing</button>
+</div>
+</div>
+</form>
+{% endblock %}
+
+
+

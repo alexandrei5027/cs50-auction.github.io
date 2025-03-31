@@ -1,0 +1,76 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Auction from {{ data.user_posted }}
+{% endblock %}
+
+{% block body %}
+<div class="{% if not data.active %} bg-light.bg-gradient {% endif %}">
+    <div class="container-fluid ">
+        
+        <div class="row">
+        <div class="d-flex align-items-center col-6">
+            <div class="col-6">
+                <img src="{{data.photo.url}}" style="max-width: 300px; border-radius: 10%;">
+            </div>
+            <div class="col-6 text-center">
+                <p>Auction by: {{data.user_posted}}</p>
+                <p>Highest bid: {{data.currentPrice}} RON</p>
+                <p>Starting Price: {{data.startingPrice}} RON</p>
+                <p>Expiring at : {{data.expire}}</p>
+            </div>
+            </div>
+            <div class="col-6 text-center">
+                Bid History
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">User</th>
+                            <th scope="col">Bid</th>
+                            <th scope="col">Date/Time</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        {% for bid in bids %}
+                        <tr>
+                        <th scope="row">{{bid.user_id}}</th>
+                        <td>{{bid.bid_price}}</td>
+                        <td>{{bid.date}}</td>
+                        </tr>   
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row d-flex align-items-center text-center">
+
+            {% if data.active == False %}
+            <p class="alert alert-warning text-center col-6 m-2">Listing Expired. Won by : {{bids.0.user_id}}
+            {% else %}
+        
+            {% if user.username|lower == data.user_posted|lower %}
+                <p class="alert alert-warning text-center col-6 m-2">You cannot bid on your own listing.</p>
+            {% else %}
+            <form class="text-center text-capitalize mt-3 col-6" method="post">
+                {% csrf_token %}
+                {{form}}
+                <button type="submit" class="button btn-success btn">Place bid</button>
+
+            </form>
+
+            {% endif %}
+
+            {% endif %}
+        </div>
+    </div>
+    <form action="{% url 'add_wishlist' data.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="button btn btn-primary">{% if wishlist %} Remove From Wishlist {% else %} Add To Wishlist {% endif %}</button>
+    </form>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    <div class="container ms-0">
+        <div class="row d-flex align-items-center ms-0">
+    {% for auction in auctions %}
+
+            <div class="col-xl-3 col-12 col-md-6 mb-3 text-center">
+            <img src="{{ auction.photo.url }}" style="max-width: 300px; border-radius: 10%;">
+            </div>
+            <div class="col-xl-3 col-12 col-md-6 mb-3 text-center">
+
+                <p>Auction by: {{auction.user_posted}}</p>
+                <p>Current Price: {{auction.currentPrice}} RON</p>
+                <a class="button btn btn-success text-white" href="{% url 'see_auction' auction.id %}">
+                  
+                    {% if user.username|lower == auction.user_posted|lower %}
+                     Your auction <br>
+                     See details 
+                     {% else %}
+                     BID
+                     {% endif %}
+                </a>
+            </div>
+    
+          
+       
+    {% endfor %}
+</div>
+       
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %} Wishlist {% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row align-items-center">
+        {% for wish in wishlist %}
+        <div class="col-xl-3 col-12 col-md-6 mb-3 text-center">
+            <img src="{{ wish.listing.photo.url }}" style="max-width: 300px; border-radius: 10%;">
+            </div>
+            <div class="col-xl-3 col-12 col-md-6 mb-3 text-center">
+
+                <p>Auction by: {{wish.listing.user_posted}}</p>
+                <p>Current Price: {{wish.listing.currentPrice}} RON</p>
+                <p>Active : 
+                    {% if wish.listing.active %} ✅ </p>
+                    <a class="button btn btn-success text-white" href="{% url 'see_auction' wish.listing.id %}">
+                  
+                        {% if user.username|lower == wish.listing.user_posted|lower %}
+                         Your auction <br>
+                         See details 
+                         {% else %}
+                         BID
+                         {% endif %}
+                    </a>
+                         {% else %} ❌ </p>
+                     {% endif %}
+               
+            </div>
+
+            {%endfor%}
+        
+    </div>
+</div>
+
+
+{% endblock %}
