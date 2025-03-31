@@ -18,7 +18,7 @@ def check_for_expired():
         
 check_for_expired()
 
-@login_required
+@login_required(login_url="/login")
 def index(request):
     
 
@@ -52,7 +52,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("login"))
 
 
 def register(request):
@@ -82,7 +82,7 @@ def register(request):
         return render(request, "auctions/register.html")
     
 
-@login_required
+@login_required(login_url="/login")
 # See auction data and bid for it
 def see_auction(request, auction_id):
     check_for_expired()
@@ -129,7 +129,7 @@ def see_auction(request, auction_id):
         'data' : auction_data[0], 'form' : bid_form, 'bids' : bids_data, 'wishlist' : wishlist
     })
 
-@login_required
+@login_required(login_url="/login")
 def create_listing(request):
         
     class ListingForm(ModelForm):
@@ -163,12 +163,12 @@ def create_listing(request):
         form.fields[field].widget.attrs["placeholder"] = field.capitalize
     return render(request, "auctions/create_listing.html", { 'form' : form})
 
-@login_required
+@login_required(login_url="/login")
 def get_wishlist(request):
     wishlist = Wishlist.objects.filter(user=request.user).all()
     return render(request, "auctions/wishlist.html", {'wishlist' : wishlist})
 
-@login_required
+@login_required(login_url="/login")
 def add_wishlist(request, id):
     auction_data = Listing.objects.filter(pk=id).all()
     if request.method == 'POST':
