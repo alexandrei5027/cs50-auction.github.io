@@ -98,7 +98,7 @@ Auction from {{ data.user_posted }}
         {% for comment in comments %}
         <div class="row align-items-center comment rounded bg-info pt-2 mb-3">
         <div class="col-3 profile-pic text-center">
-            <img src="{% static 'auctions/no_image.png'  %}" width="50px">
+            <img src="{% if comment.profile_pic.url != None %} {{comment.profile_pic.url}} {% else %} {% static 'auctions/no_image.png'  %} {% endif %}" width="50px">
             <p class="text-wrap">{{comment.user}}</p>
         </div>
         <div class="col-9 text-left mt-1">

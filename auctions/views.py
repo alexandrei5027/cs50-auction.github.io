@@ -131,11 +131,13 @@ def see_auction(request, auction_id):
 
     # Load Comments
     comments = Comment.objects.filter(listing = auction_data[0]).all()
-    
-        
+    for comment in comments:
+        comment.profile_pic = User.objects.filter(pk = comment.user.pk).first().profile_picture
+        if comment.profile_pic == '0':
+            comment.profile_pic = None
     comment_form = CommentForm()
     return render(request , "auctions/see_auction.html", {
-        'data' : auction_data[0], 'form' : bid_form, 'bids' : bids_data, 'wishlist' : wishlist, 'comments' : comments, 'comment_form' : comment_form
+        'data' : auction_data[0], 'form' : bid_form, 'bids' : bids_data, 'wishlist' : wishlist, 'comments' : comments, 'comment_form' : comment_form 
     })
 
 @login_required(login_url="/login")

@@ -5,8 +5,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 class User(AbstractUser):
-    pass
-
+    profile_picture = models.ImageField(upload_to='profile_picture', default=None)
 
 # Auction Listing Model
 class Listing(models.Model):
