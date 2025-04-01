@@ -24,6 +24,9 @@ class Listing(models.Model):
         if timezone.now() >= self.expire:
             self.active = False
             self.save()
+    
+    def __str__(self):
+        return f"Listing by {self.user_posted} on {self.uploadDate}"
 
 
 # Bids for listings

@@ -82,10 +82,10 @@ Auction from {{ data.user_posted }}
             <div class="row align-items-center">
             {% csrf_token %}
             <div class="form-group col-8">
-       
+            {% for field in comment_form %}
             <label for="Comment" class="form-label text-primary">Add a comment</label>
-            <input type="text" class="form-control" id="Comment" placeholder="Your comment text...">
-
+            {{field}}
+            {% endfor %}
             </div>
             <div class="col-4 mt-3">
             <button class="button btn btn-success">Add Comment</button> 
@@ -93,20 +93,23 @@ Auction from {{ data.user_posted }}
              
         </form>
     </div>
-    <div class="comment-section">
+    <div class="comment-section text-black fw-bold">
     
-    
-        <div class="row align-items-center comment">
-        <div class="col-1 profile-pic text-center">
+        {% for comment in comments %}
+        <div class="row align-items-center comment rounded bg-info pt-2 mb-3">
+        <div class="col-3 profile-pic text-center">
             <img src="{% static 'auctions/no_image.png'  %}" width="50px">
-            <p class="text-center">Name</p>
+            <p class="text-wrap">{{comment.user}}</p>
         </div>
-        <div class="col-9 text-left mt-3">
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam similique voluptatum quidem blanditiis corrupti, temporibus facere dolores fugiat. Obcaecati saepe molestias fugiat ad officia aliquid corrupti temporibus, odio autem accusantium, ipsum atque odit! Recusandae rerum reprehenderit rem placeat architecto beatae impedit praesentium temporibus, similique, nesciunt libero inventore quo nostrum perspiciatis.</p>
+        <div class="col-9 text-left mt-1">
+            <p>{{comment.comment}}</p>
         </div>
 
-         </div>
+             </div>
+         {% endfor %}
 
+         
+  </div>
          
 </div>
 </div>

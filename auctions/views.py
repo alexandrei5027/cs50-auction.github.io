@@ -11,6 +11,8 @@ from django.utils import timezone
 from datetime import timedelta
 
 
+
+
 # Check for any expired listings
 def check_for_expired():
     for listing in Listing.objects.filter(active = True):
@@ -125,8 +127,15 @@ def see_auction(request, auction_id):
         wishlist = False
 
 
+    # Load Comments
+    comments = Comment.objects.filter(listing = auction_data[0]).all()
+    
+    class CommentForm(forms.Form):
+        text = forms.CharField(min_length=5, max_length=100, required=True, widget=forms.TextInput({'placeholder' : 'Your coment text here...', 'label' : 'Add a comment', 'class' : 'form-control'}))
+        
+    comment_form = CommentForm()
     return render(request , "auctions/see_auction.html", {
-        'data' : auction_data[0], 'form' : bid_form, 'bids' : bids_data, 'wishlist' : wishlist
+        'data' : auction_data[0], 'form' : bid_form, 'bids' : bids_data, 'wishlist' : wishlist, 'comments' : comments, 'comment_form' : comment_form
     })
 
 @login_required(login_url="/login")
@@ -148,7 +157,7 @@ def create_listing(request):
 
         if form.is_valid():
             data = form.cleaned_data
-            l = Listing(title = data['title'], user_posted = request.user, photo = data['photo'], startingPrice = data['startingPrice'], category = data['category'])
+            l = Listing(title = data['title'], user_posted = request.user, photo = data['photo'], startingPrice = data['startingPrice'], category = data['category'], currentPrice = data['startingPrice'])
             l.save()
             return HttpResponseRedirect(reverse("index"))
         else:
@@ -180,3 +189,8 @@ def add_wishlist(request, id):
                 Wishlist.objects.filter(user = request.user, listing = auction_data[0]).delete()
                 print('removed')
     return HttpResponseRedirect(reverse("see_auction", args=[id]))
+
+
+@login_required(login_url="/login")
+def add_comment(request, text, listing_id):
+    listing = Listing.objects.filter(pk = listing_id).only()
