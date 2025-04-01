@@ -1,5 +1,6 @@
 {% extends "auctions/layout.html" %}
 
+{% load static %}
 {% block title %}
 Auction from {{ data.user_posted }}
 {% endblock %}
@@ -71,6 +72,45 @@ Auction from {{ data.user_posted }}
         <button type="submit" class="button btn btn-primary">{% if wishlist %} Remove From Wishlist {% else %} Add To Wishlist {% endif %}</button>
     </form>
 </div>
+
+<div class="container mt-5 row mx-auto">
+        <div class="col-12">
+    <p class="text-info text-center fw-bold h3">Comments</p>
+</div>
+    <div class="col-12 add-coment">
+        <form>
+            <div class="row align-items-center">
+            {% csrf_token %}
+            <div class="form-group col-8">
+       
+            <label for="Comment" class="form-label text-primary">Add a comment</label>
+            <input type="text" class="form-control" id="Comment" placeholder="Your comment text...">
+
+            </div>
+            <div class="col-4 mt-3">
+            <button class="button btn btn-success">Add Comment</button> 
+             </div>
+             
+        </form>
+    </div>
+    <div class="comment-section">
+    
+    
+        <div class="row align-items-center comment">
+        <div class="col-1 profile-pic text-center">
+            <img src="{% static 'auctions/no_image.png'  %}" width="50px">
+            <p class="text-center">Name</p>
+        </div>
+        <div class="col-9 text-left mt-3">
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam similique voluptatum quidem blanditiis corrupti, temporibus facere dolores fugiat. Obcaecati saepe molestias fugiat ad officia aliquid corrupti temporibus, odio autem accusantium, ipsum atque odit! Recusandae rerum reprehenderit rem placeat architecto beatae impedit praesentium temporibus, similique, nesciunt libero inventore quo nostrum perspiciatis.</p>
+        </div>
+
+         </div>
+
+         
+</div>
+</div>
+
 
 {% endblock %}
 
