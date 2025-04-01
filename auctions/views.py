@@ -12,6 +12,8 @@ from datetime import timedelta
 
 
 
+class CommentForm(forms.Form):
+    text = forms.CharField(min_length=5, max_length=100, required=True, widget=forms.TextInput({'placeholder' : 'Your coment text here...', 'label' : 'Add a comment', 'class' : 'form-control'}))
 
 # Check for any expired listings
 def check_for_expired():
@@ -130,8 +132,6 @@ def see_auction(request, auction_id):
     # Load Comments
     comments = Comment.objects.filter(listing = auction_data[0]).all()
     
-    class CommentForm(forms.Form):
-        text = forms.CharField(min_length=5, max_length=100, required=True, widget=forms.TextInput({'placeholder' : 'Your coment text here...', 'label' : 'Add a comment', 'class' : 'form-control'}))
         
     comment_form = CommentForm()
     return render(request , "auctions/see_auction.html", {
@@ -192,5 +192,13 @@ def add_wishlist(request, id):
 
 
 @login_required(login_url="/login")
-def add_comment(request, text, listing_id):
-    listing = Listing.objects.filter(pk = listing_id).only()
+def add_comment(request, listing_id):
+    listing = Listing.objects.filter(pk = listing_id).all()[0]
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comm = Comment(user = request.user, listing = listing, comment = form.cleaned_data['text'])
+        comm.save()
+    return HttpResponseRedirect(reverse("see_auction", args=[listing_id]))
+
+
+

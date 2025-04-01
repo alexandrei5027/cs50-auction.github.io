@@ -77,8 +77,8 @@ Auction from {{ data.user_posted }}
         <div class="col-12">
     <p class="text-info text-center fw-bold h3">Comments</p>
 </div>
-    <div class="col-12 add-coment">
-        <form>
+    <div class="col-12 add-comment">
+        <form method="post" action="{% url 'add_comment' data.id %}">
             <div class="row align-items-center">
             {% csrf_token %}
             <div class="form-group col-8">
@@ -88,7 +88,7 @@ Auction from {{ data.user_posted }}
             {% endfor %}
             </div>
             <div class="col-4 mt-3">
-            <button class="button btn btn-success">Add Comment</button> 
+            <button type="submit" class="button btn btn-success">Add Comment</button> 
              </div>
              
         </form>
