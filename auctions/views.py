@@ -101,27 +101,7 @@ def see_auction(request, auction_id):
     # Initiate Form
     bid_form = BidForm()
 
-    # If request = post, check if form is valid
-    if request.method == 'POST':
-        form = BidForm(request.POST)
-        if form.is_valid() and auction_data[0].active:
-             # If form is valid, check if bid > currentPrice and submit it
-             b = Bid(listing = auction_data[0], bid_price = form.cleaned_data['bid'], user_id = request.user)
-             if b.bid_price > auction_data[0].currentPrice:
-                Listing.objects.filter(pk=auction_id).update(currentPrice = b.bid_price)
-                Listing.objects.filter(pk=auction_id).update(expire = timezone.now() + timedelta(hours = 24))
-                b.save()
-                
-        else:
-            return render(request, "auctions/see_auction.html", {
-                    'data' : auction_data[0], 'form' : bid_form, 'message' : 'Invalid Bid Sum', 'bids' : bids_data
-                })
-    
-    # Load Bids Data and render listing template
-    bids_data = Bid.objects.filter(listing = auction_id).order_by('-bid_price')[:10]
-
-
-    # Check wishlist
+        # Check wishlist
     check_wishlist = Wishlist.objects.filter(user = request.user, listing = auction_data[0]).all()
     if len(check_wishlist) > 0:
         wishlist = True
@@ -136,6 +116,27 @@ def see_auction(request, auction_id):
         if comment.profile_pic == '0':
             comment.profile_pic = None
     comment_form = CommentForm()
+
+    # If request = post, check if form is valid
+    if request.method == 'POST':
+        form = BidForm(request.POST)
+        if form.is_valid() and auction_data[0].active:
+             # If form is valid, check if bid > currentPrice and submit it
+             b = Bid(listing = auction_data[0], bid_price = form.cleaned_data['bid'], user_id = request.user)
+             if b.bid_price > auction_data[0].currentPrice:
+                Listing.objects.filter(pk=auction_id).update(currentPrice = b.bid_price)
+                Listing.objects.filter(pk=auction_id).update(expire = timezone.now() + timedelta(hours = 24))
+                b.save()
+                
+        else:
+            return render(request , "auctions/see_auction.html", {
+        'data' : auction_data[0], 'form' : bid_form, 'bids' : bids_data, 'wishlist' : wishlist, 'comments' : comments, 'comment_form' : comment_form 
+    })
+    # Load Bids Data and render listing template
+    bids_data = Bid.objects.filter(listing = auction_id).order_by('-bid_price')[:10]
+
+
+
     return render(request , "auctions/see_auction.html", {
         'data' : auction_data[0], 'form' : bid_form, 'bids' : bids_data, 'wishlist' : wishlist, 'comments' : comments, 'comment_form' : comment_form 
     })
@@ -203,4 +204,9 @@ def add_comment(request, listing_id):
     return HttpResponseRedirect(reverse("see_auction", args=[listing_id]))
 
 
-
+@login_required(login_url="/login")
+def end_listing(request, listing_id):
+    listing = Listing.objects.filter(pk = listing_id).first()
+    if listing.user_posted == request.user:
+        Listing.objects.filter(pk=listing_id).update(active = False)
+    return HttpResponseRedirect(reverse("see_auction", args=[listing_id]))
