@@ -54,15 +54,15 @@ Auction from {{ data.user_posted }}
         
             {% if user.username|lower == data.user_posted|lower %}
                 <p class="alert alert-warning text-center col-6 m-2">You cannot bid on your own listing.</p>
-                <form class="text-center text-capitalize mt-3 col-6" method="post" action="{% url 'end_listing' data.id %}" id="end_auction">
+                <form class="text-capitalize col-6 mt-3" method="post" action="{% url 'end_listing' data.id %}" id="end_auction">
                     {% csrf_token %}
                     <button type="submit" class="button btn-danger btn" >End auction</button>
-                
+                </form>
             {% else %}
-            <form class="text-center text-capitalize mt-3 col-6" method="post">
+            <form class=" text-capitalize col-3 mt-3" method="post">
                 {% csrf_token %}
                 {{form}}
-                <button type="submit" class="button btn-success btn">Place bid</button>
+                <button type="submit" class="button btn-success btn mt-1">Place bid</button>
 
             </form>
             
@@ -71,10 +71,11 @@ Auction from {{ data.user_posted }}
 
             {% endif %}
 
-            <form action="{% url 'add_wishlist' data.id %}" method="POST">
+            <form action="{% url 'add_wishlist' data.id %}" method="POST" class="text-capitalize col-3">
                 {% csrf_token %}
                 <button type="submit" class="button btn btn-primary">{% if wishlist %} Remove From Wishlist {% else %} Add To Wishlist {% endif %}</button>
             </form>
+
         </div>
     </div>
     
