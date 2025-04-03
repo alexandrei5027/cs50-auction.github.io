@@ -100,7 +100,7 @@ Auction from {{ data.user_posted }}
              
         </form>
     </div>
-    <div class="comment-section text-black fw-bold">
+    <div class="comment-section text-black fw-bold mt-3">
     
         {% for comment in comments %}
         <div class="row align-items-center comment rounded bg-info pt-2 mb-3">
@@ -108,8 +108,18 @@ Auction from {{ data.user_posted }}
             <img src="{% if comment.profile_pic.url != None %} {{comment.profile_pic.url}} {% else %} {% static 'auctions/no_image.png'  %} {% endif %}" width="50px">
             <p class="text-wrap">{{comment.user}}</p>
         </div>
-        <div class="col-9 text-left mt-1">
+        <div class="col-8 text-left mt-1">
             <p>{{comment.comment}}</p>
+        </div>
+      <!-- Example single danger button -->
+        <div class="btn-group col-1">
+            <a type="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">
+            <img src="{% static 'auctions/kebab.png' %}" style="max-height: 15px;">
+            </a>
+            <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Edit</a></li>
+            <li><a class="dropdown-item" href="#">Delete</a></li>
+            </ul>
         </div>
 
              </div>
